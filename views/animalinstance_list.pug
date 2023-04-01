@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+
+  ul
+    each val in animalinstance_list
+      li
+        a(href=val.url) #{val.animal.name} : #{val.imprint} - #{val.version}
+       
+
+    else
+      li There are no animals found.

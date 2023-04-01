@@ -1,45 +1,71 @@
 const Animal = require("../models/animal");
+const AnimalInstance = require("../models/animalinstance");
+const async = require("async");
 
 exports.index = (req, res) => {
-  res.send("NOT IMPLEMENTED: Site Home Page");
+  async.parallel(
+    {
+      animal_count(callback) {
+        Animal.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
+      },
+      animal_instance_count(callback) {
+        AnimalInstance.countDocuments({}, callback);
+      },
+    },
+    (err, results) => {
+      res.render("index", {
+        title: "Control Home",
+        error: err,
+        data: results,
+      });
+    }
+  );
+};
+// Display list of all animals.
+exports.animal_list = function (req, res, next) {
+  Animal.find({}, "title author")
+    .sort({ current_version: 1 })
+    .populate("name")
+    .exec(function (err, list_animals) {
+      if (err) {
+        return next(err);
+      }
+      //Successful, so render
+      res.render("animal_list", { title: "Species List", animal_list: list_animals });
+    });
 };
 
-// Display list of all books.
-exports.book_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book list");
+// Display detail page for a specific animal.
+exports.animal_detail = (req, res) => {
+  res.send(`NOT IMPLEMENTED: animal detail: ${req.params.id}`);
 };
 
-// Display detail page for a specific book.
-exports.book_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
+// Display animal create form on GET.
+exports.animal_create_get = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal create GET");
 };
 
-// Display book create form on GET.
-exports.book_create_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book create GET");
+// Handle animal create on POST.
+exports.animal_create_post = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal create POST");
 };
 
-// Handle book create on POST.
-exports.book_create_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book create POST");
+// Display animal delete form on GET.
+exports.animal_delete_get = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal delete GET");
 };
 
-// Display book delete form on GET.
-exports.book_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book delete GET");
+// Handle animal delete on POST.
+exports.animal_delete_post = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal delete POST");
 };
 
-// Handle book delete on POST.
-exports.book_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book delete POST");
+// Display animal update form on GET.
+exports.animal_update_get = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal update GET");
 };
 
-// Display book update form on GET.
-exports.book_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book update GET");
-};
-
-// Handle book update on POST.
-exports.book_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book update POST");
+// Handle animal update on POST.
+exports.animal_update_post = (req, res) => {
+  res.send("NOT IMPLEMENTED: animal update POST");
 };

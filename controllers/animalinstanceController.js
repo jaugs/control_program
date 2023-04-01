@@ -1,41 +1,52 @@
 const AnimalInstance = require("../models/animalinstance");
 
-// Display list of all BookInstances.
-exports.bookinstance_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance list");
+// Display list of all AnimalInstances.
+exports.animalinstance_list = function (req, res, next) {
+  AnimalInstance.find()
+    .populate("animal")
+    .exec(function (err, list_animalinstances) {
+      if (err) {
+        return next(err);
+      }
+      // Successful, so render
+      res.render("animalinstance_list", {
+        title: "Animal Instance List",
+        animalinstance_list: list_animalinstances,
+      });
+    });
 };
 
-// Display detail page for a specific BookInstance.
-exports.bookinstance_detail = (req, res) => {
+// Display detail page for a specific AnimalInstance.
+exports.animalinstance_detail = (req, res) => {
   res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
 };
 
-// Display BookInstance create form on GET.
-exports.bookinstance_create_get = (req, res) => {
+// Display AnimalInstance create form on GET.
+exports.animalinstance_create_get = (req, res) => {
   res.send("NOT IMPLEMENTED: BookInstance create GET");
 };
 
-// Handle BookInstance create on POST.
-exports.bookinstance_create_post = (req, res) => {
+// Handle AnimalInstance create on POST.
+exports.animalinstance_create_post = (req, res) => {
   res.send("NOT IMPLEMENTED: BookInstance create POST");
 };
 
-// Display BookInstance delete form on GET.
-exports.bookinstance_delete_get = (req, res) => {
+// Display AnimalInstance delete form on GET.
+exports.animalinstance_delete_get = (req, res) => {
   res.send("NOT IMPLEMENTED: BookInstance delete GET");
 };
 
-// Handle BookInstance delete on POST.
-exports.bookinstance_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete POST");
+// Handle AnimalInstance delete on POST.
+exports.animalinstance_delete_post = (req, res) => {
+  res.send("NOT IMPLEMENTED: AnimalInstance delete POST");
 };
 
-// Display BookInstance update form on GET.
-exports.bookinstance_update_get = (req, res) => {
+// Display AnimalInstance update form on GET.
+exports.animalinstance_update_get = (req, res) => {
   res.send("NOT IMPLEMENTED: BookInstance update GET");
 };
 
-// Handle bookinstance update on POST.
-exports.bookinstance_update_post = (req, res) => {
+// Handle AnimalInstance update on POST.
+exports.animalinstance_update_post = (req, res) => {
   res.send("NOT IMPLEMENTED: BookInstance update POST");
 };

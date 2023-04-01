@@ -13,7 +13,7 @@ const AnimalSchema = new Schema({
     enum: ["Omnivore", "Carnivore", "Herbivore"],
     default: "Omnivore",
   },
-  category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+  category: { type: Schema.Types.ObjectId, ref: "Category" },
   synth_date: { type: Date, default: Date.now }
 });
 

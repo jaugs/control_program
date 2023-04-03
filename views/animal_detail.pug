@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1 Species: #{animal.name}
+
+  p #[strong Scientific Name:] #{animal.scientificname}
+  p #[strong Version:] #{animal.current_version}
+  p #[strong Diet:] #{animal.diet}
+  p #[strong Synth Date:] #{animal.synth_date}
+  p #[strong Description:] #{animal.description}
+
+  div(style='margin-left:20px;margin-top:20px')
+    h4 Current Animals:
+
+    each val in animal_instances
+      hr
+      p #[strong Imprint:] 
+        a(href=val.url) #{val.imprint}
+      
+
+    else
+      p There are no records of this species

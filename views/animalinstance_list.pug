@@ -3,11 +3,11 @@ extends layout
 block content
   h1= title
 
-  ul
+  ul Animal Count
     each val in animalinstance_list
       li
         a(href=val.url) #{val.animal.name} : #{val.imprint} - #{val.version}
-       
+        p #{val.birth_date_formatted}
 
     else
       li There are no animals found.

@@ -36,8 +36,35 @@ exports.animal_list = function (req, res, next) {
 };
 
 // Display detail page for a specific animal.
-exports.animal_detail = (req, res) => {
-  res.send(`NOT IMPLEMENTED: animal detail: ${req.params.id}`);
+exports.animal_detail = (req, res, next) => {
+  async.parallel(
+    {
+      animal(callback) {
+        Animal.findById(req.params.id)
+          .exec(callback);
+      },
+      animal_instance(callback) {
+        AnimalInstance.find({ animal: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.animal == null) {
+        // No results.
+        const err = new Error("Animal not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render("animal_detail", {
+        title: results.animal.name,
+        animal: results.animal,
+        animal_instances: results.animal_instance,
+      });
+    }
+  );
 };
 
 // Display animal create form on GET.

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const { DateTime } = require("luxon");
 const Schema = mongoose.Schema;
 
 const AnimalInstanceSchema = new Schema({
@@ -24,6 +24,14 @@ const AnimalInstanceSchema = new Schema({
 AnimalInstanceSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
   return `/catalog/animalinstance/${this._id}`;
+});
+
+AnimalInstanceSchema.virtual("birth_date_formatted").get(function () {
+  return DateTime.fromJSDate(this.birth_date).toLocaleString(DateTime.DATE_MED);
+});
+
+AnimalInstanceSchema.virtual("death_date_formatted").get(function () {
+  return DateTime.fromJSDate(this.death_date).toLocaleString(DateTime.DATE_MED);
 });
 
 // Export model

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+
+  h1 ID: #{animalinstance.imprint}
+
+  p #[strong Species:]
+      a(href=animalinstance.animal.url)  #{animalinstance.animal.name}
+  p #[strong Version:] #{animalinstance.version}
+  p #[strong Weight:] #{animalinstance.current_weight} tonnes
+  p #[strong Height:] #{animalinstance.current_height} meters
+  p #[strong Born:] #{animalinstance.birth_date_formatted}
+  if animalinstance.death_date
+     p #[strong Death:] #{animalinstance.death_date_formatted}
+  p #[strong Diet:] #{animalinstance.animal.diet}
+    hr
+  p
+    a(href=animalinstance.url+'/delete') Delete Animal
+  p
+    a(href=animalinstance.url+'/update') Update Animal

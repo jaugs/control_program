@@ -11,25 +11,25 @@ const animal_instance_controller = require("../controllers/animalinstanceControl
 router.get("/", animal_controller.index);
 
 // GET request for creating a Animal. NOTE This must come before routes that display Animal (uses id).
-router.get("/animal/create", animal_controller.animal_create_get);
+router.get("/animals/create", animal_controller.animal_create_get);
 
 // POST request for creating Animal.
-router.post("/animal/create", animal_controller.animal_create_post);
+router.post("/animals/create", animal_controller.animal_create_post);
 
 // GET request to delete Animal.
-router.get("/animal/:id/delete", animal_controller.animal_delete_get);
+router.get("/animals/:id/delete", animal_controller.animal_delete_get);
 
 // POST request to delete Animal.
-router.post("/animal/:id/delete", animal_controller.animal_delete_post);
+router.post("/animals/:id/delete", animal_controller.animal_delete_post);
 
 // GET request to update Animal.
-router.get("/animal/:id/update", animal_controller.animal_update_get);
+router.get("/animals/:id/update", animal_controller.animal_update_get);
 
 // POST request to update Animal.
-router.post("/animal/:id/update", animal_controller.animal_update_post);
+router.post("/animals/:id/update", animal_controller.animal_update_post);
 
 // GET request for one Animal.
-router.get("/animal/:id", animal_controller.animal_detail);
+router.get("/animals/:id", animal_controller.animal_detail);
 
 // GET request for list of all Animal items.
 router.get("/animals", animal_controller.animal_list);

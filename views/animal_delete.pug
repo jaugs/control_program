@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1 #{title}
+  p= animal.name
+
+  if animal_instances.length
+
+    p #[strong Delete the following animal instances before attempting to delete this species:]
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4 Animal Instances
+
+      dl
+      each animalinstance in animal_instances
+        dt
+          a(href=animalinstance.url) #{animal.name}: #{animalinstance.imprint}
+        dd #{animalinstance.version}
+
+  else
+    p Do you really want to delete this species?
+
+    form(method='POST' action='')
+      div.form-group
+        input#animalid.form-control(type='hidden',name='animalid', required='true', value=animal._id )
+
+      button.btn.btn-primary(type='submit') Delete

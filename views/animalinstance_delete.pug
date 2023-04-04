@@ -1,0 +1,27 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    p #[strong Are you sure you want to delete this Animal?]
+
+     div(style="margin-left:20px")
+
+        p #[strong Imprint]: #{animalinstance.imprint}
+
+
+        p #[strong Species:] 
+            a(href=animalinstance.animal.url) #{animalinstance.animal.name}
+
+        p #[strong Version:] #{animalinstance.version}
+
+        p #[strong Date of Birth:] #{animalinstance.birth_date_formatted}
+
+        p #[strong Date of Death:] #{animalinstance.death_date_formatted}
+
+
+    form(method='POST' action='')
+      div.form-group
+        input#id.form-control(type='hidden',name='id', required='true', value=animalinstance._id )
+
+      button.btn.btn-primary(type='submit') Delete

@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+   
+    div.form-group
+      label(for='name') Name:
+      input#name.form-control(type='text' placeholder='Species Common Name...' name='name' required='true' value=(undefined===animal ? '' : animal.name))
+    div.form-group
+      label(for='scientificname') Scientific Name:
+      input#scientificname.form-control(type='text' placeholder='Species Scientific Name...' name='scientificname' required='true' value=(undefined===animal ? '' : animal.scientificname))
+    div.form-group
+      label(for='current_version') Current Version:
+      input#current_version.form-control(type='text' placeholder='v' name='current_version' required='true' value=(undefined===animal ? '' : animal.current_version))
+    
+    div.form-group
+      label(for='synth_date') Date when animal synthesized:
+      input#synth_date.form-control(type='date' name='synth_date' value=(undefined===animal ? '' : animal.synth_date))
+
+    div.form-group
+      label(for='diet') Diet:
+      select#diet.form-control(type='select' placeholder='Select diet' name='diet' required='true')
+        option(value='Omnivore') Omnivore
+        option(value='Herbivore') Herbivore
+        option(value='Carnivore') Carnivore
+    div.form-group
+      label(for='description') Species Description:
+      input#description.form-control(type='text' placeholder='Description...' name='description' required='true' value=(undefined===animal ? '' : animal.description))
+    
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

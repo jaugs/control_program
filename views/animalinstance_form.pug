@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  h1=title
+
+  form(method='POST' action='')
+   
+    div.form-group
+      label(for='animal') Species:
+      select#animal.form-control(type='select' placeholder='Species Common Name...' name='animal' required='true') 
+        - animal_list.sort(function(a,b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ?  -1 : (textA > textB) ? 1 : 0;});
+        for animal in animal_list
+            option(value=animal._id, selected=(selected_animal==animal._id.toString() ? 'selected' : false) ) #{animal.name}
+    
+    div.form-group
+      label(for='imprint') Imprint:
+      input#imprint.form-control(type='text' placeholder='Imprint...' name='imprint' required='true' value=(undefined===animalinstance ? '' : animalinstance.imprint))
+
+    div.form-group
+      label(for='version') Version:
+      input#version.form-control(type='text' placeholder='Version...' name='version' required='true' value=(undefined===animalinstance ? '' : animalinstance.version))
+
+    div.form-group
+      label(for='current_weight') Current weight (in tonnes):
+      input#current_weight.form-control(type='text' placeholder='weight...' name='current_weight' required='true' value=(undefined===animalinstance ? '' : animalinstance.current_weight))
+    
+    div.form-group
+      label(for='current_height') Current height (in meters):
+      input#current_height.form-control(type='text' placeholder='height...' name='current_height' required='true' value=(undefined===animalinstance ? '' : animalinstance.current_height))
+    
+
+    div.form-group
+      label(for='birth_date') Birth Date:
+      input#birth_date.form-control(type='date' name='birth_date' value=(undefined===animalinstance ? '' : animalinstance.birth_date))
+
+    div.form-group
+      label(for='death_date') Death Date:
+      input#death_date.form-control(type='date' name='death_date' value=(undefined===animalinstance ? '' : animalinstance.death_date))
+
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

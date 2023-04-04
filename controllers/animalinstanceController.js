@@ -1,6 +1,7 @@
 const AnimalInstance = require("../models/animalinstance");
 const { body, validationResult } = require("express-validator");
 const Animal = require("../models/animal");
+const async = require("async");
 
 // Display list of all AnimalInstances.
 exports.animalinstance_list = function (req, res, next) {
@@ -163,11 +164,113 @@ exports.animalinstance_delete_post = function (req, res, next) {
 };
 
 // Display AnimalInstance update form on GET.
-exports.animalinstance_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance update GET");
-};
+exports.animalinstance_update_get = (req, res, next) => {
+  // Get animal instance for form. 
+  async.parallel(
+    {
+      animalinstance: function (callback) {
+        AnimalInstance.findById(req.params.id)
+        .populate("animal")
+        .exec(callback);
+      },
+      animals: function (callback) {
+        Animal.find(callback)
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.animalinstance == null) {
+        //no results
+        var err = new Error("Animal not found");
+        err.status = 404;
+        return next(err);
+      }
+      //Success
+    res.render("animalinstance_form", {
+      title: "Update Animal",
+      animal_list: results.animals,
+      selected_animal: results.animalinstance.animal._id,
+      animalinstance: results.animalinstance,
+    });
+    });
+}
 
 // Handle AnimalInstance update on POST.
-exports.animalinstance_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance update POST");
-};
+exports.animalinstance_update_post = [
+
+  //Validate and Sanitixe
+  body("animal", "Species must be specified").trim().isLength({ min: 1 }).escape(),
+  body("imprint", "Imprint must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("version", "Version must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("current_weight", "Weight must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("current_height", "Height must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),  
+  body("birth_date", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  body("death_date", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+
+  //Process request after validation/sanitization
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    //Create a AnimalInstance Object with escaped/trimmed data and current ID
+    var animalinstance = new AnimalInstance({
+      animal: req.body.animal,
+      imprint: req.body.imprint,
+      version: req.body.version,
+      current_weight: req.body.current_weight,
+      current_height: req.body.current_height,
+      birth_date: req.body.birth_date,
+      death_date: req.body.death_date,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      //Erros, re render form with sanitized values/error messages
+      Animal.find({}, "title").exec(function (err, animals) {
+        if (err) {
+          return next(err);
+        }
+        res.render("animalinstance_form", {
+          title: "Update Animal",
+          animal_list: animals,
+          selected_animal: animalinstance.animal._id,
+          erros: errors.array(),
+          animalinstance: animalinstance,
+        });
+      });
+      return;
+    } else {
+      //Success Data is valid
+      AnimalInstance.findByIdAndUpdate(
+        req.params.id,
+        animalinstance,
+        {},
+        function(err, theanimalinstance) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect(theanimalinstance.url);
+        }
+      );
+    }
+  },
+];

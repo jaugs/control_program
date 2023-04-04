@@ -107,7 +107,6 @@ exports.animal_create_post = [
     if (!errors.isEmpty()) {
       // There are errors. Render form again with sanitized values/error messages.
 
-      // Get all authors and genres for form.
       res.render("animal_form", {
         title: "Add New Species",
         name: req.body.name,
@@ -208,13 +207,100 @@ exports.animal_delete_post = (req, res, next) => {
   );
 };
 
-
 // Display animal update form on GET.
-exports.animal_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: animal update GET");
+exports.animal_update_get = (req, res, next) => {
+
+  async.parallel(
+    {
+      animal(callback) {
+        Animal.findById(req.params.id)
+          .exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.animal == null) {
+        // No results.
+        const err = new Error("Species not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+      res.render("animal_form", {
+        title: "Update Species",
+        animal: results.animal,
+      });
+    }
+  );
 };
 
 // Handle animal update on POST.
-exports.animal_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: animal update POST");
-};
+exports.animal_update_post = [
+  // Validate and sanitize fields.
+  body("name", "Species name must not be empty.")
+  .trim()
+  .isLength({ min: 1 })
+  .escape(),
+body("scientificname", "Scientific name must not be empty.")
+  .trim()
+  .isLength({ min: 1 })
+  .escape(),
+body("current_version", "Version number must not be empty.")
+  .trim()
+  .isLength({ min: 1 })
+  .escape(),
+body("diet").escape(),
+body("synth_date", "Invalid Date")
+  .optional({ checkFalsy: true})
+  .isISO8601()
+  .toDate(),
+body("description", "Description must not be empty.")
+  .trim()
+  .isLength({ min: 1 })
+  .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Book object with escaped/trimmed data and old id.
+    const animal = new Animal({
+      name: req.body.name,
+      scientificname: req.body.scientificname,
+      current_version: req.body.current_version,
+      diet: req.body.diet,
+      synth_date: req.body.synth_date,
+      description: req.body.description,
+      _id: req.params.id, //This is required, or a new ID will be assigned!
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+      res.render("animal_form", {
+        title: "Update Species",
+        name: req.body.name,
+        scientificname: req.body.genres,
+        current_version: req.body.current_version,
+        diet: req.body.diet,
+        synth_date: req.body.synth_date,
+        description: req.body.description,
+        errors: errors.array(),
+          });
+        
+      return;
+    }
+
+    // Data from form is valid. Update the record.
+    Animal.findByIdAndUpdate(req.params.id, animal, {}, (err, theanimal) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Successful: redirect to book detail page.
+      res.redirect(theanimal.url);
+    });
+  },
+];

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  
+  if error
+    p Error getting dynamic content.
+  else
+    p User List:
+
+    //- ul
+    //-   li #[strong Species:] !{data.animal_count}
+    //-   li #[strong Animals Found:] !{data.animal_instance_count}
+    

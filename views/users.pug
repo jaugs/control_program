@@ -2,12 +2,34 @@ extends layout
 
 block content
   h1= title
-  
-  if error
-    p Error getting dynamic content.
-  else
-    p User List:
+  h4 eeee #{currentUser.username}
+  ul
+    each user in user_list
+      li
+        a(href=user.url) #{user.username}
 
+    else
+      li There are no Users found.
+
+  a(href='/users/signup') Add New User
+
+  if user 
+    h3 Welcome back #{user.username}
+    <a href="/logout">LOG OUT</a>
+  else 
+    p LOG IN FORM 
+    form(method='POST' action='/login')
+   
+      div.form-group
+        label(for='username') Username:
+        input#username.form-control(type='text' placeholder='username..' name='username' required='true')
+
+      div.form-group
+        label(for='password') Password:
+        input#password.form-control(type='text' placeholder='password...' name='password' required='true')
+
+   
+      button.btn.btn-primary(type='submit') Log in
     //- ul
     //-   li #[strong Species:] !{data.animal_count}
     //-   li #[strong Animals Found:] !{data.animal_instance_count}

@@ -9,7 +9,23 @@ router.get('/', user_controller.index);
 // GET request for creating a user. NOTE This must come before routes that display User (uses id).
 router.get("/signup", user_controller.signup_get);
 
+
+// GET request for one user.
+router.get("/:id", user_controller.user_detail);
+
 // POST request for creating User.
 router.post("/signup", user_controller.signup_post);
+
+// GET request to delete user.
+router.get("/users/:id/delete", user_controller.user_delete_get);
+
+// POST request to delete user.
+router.post("/users/:id/delete", user_controller.user_delete_post);
+
+// GET request to update user.
+router.get("/users/:id/update", user_controller.user_update_get);
+
+// POST request to update user.
+router.post("/users/:id/update", user_controller.user_update_post);
 
 module.exports = router;

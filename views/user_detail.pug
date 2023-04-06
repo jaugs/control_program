@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+    h1=title
+
+    h3 User: #{user.username}
+
+    p #[strong Account Type:] Test
+
+        hr
+    p
+        a(href=user.url+'/delete') Delete User
+    p
+        a(href=user.url+'/update') Update User
+

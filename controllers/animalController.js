@@ -24,9 +24,8 @@ exports.index = (req, res) => {
 };
 // Display list of all animals.
 exports.animal_list = function (req, res, next) {
-  Animal.find({}, "title author")
-    .sort({ current_version: 1 })
-    .populate("name")
+  Animal.find({}, )
+    .sort({ name: 1})
     .exec(function (err, list_animals) {
       if (err) {
         return next(err);

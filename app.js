@@ -4,6 +4,7 @@ require('dotenv').config()
 var path = require('path');
 const session = require("express-session");
 const passport = require("passport");
+var bcrypt = require('bcryptjs');
 const LocalStrategy = require("passport-local").Strategy;
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
 passport.use(
   new LocalStrategy(async(username, password, done) => {
     try {
@@ -43,9 +45,15 @@ passport.use(
       if (!user) {
         return done(null, false, { message: "Incorrect username" });
       };
-      if (user.password !== password) {
-        return done(null, false, { message: "Incorrect password" });
-      };
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // passwords match! log user in
+          return done(null, user)
+        } else {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" })
+        }
+      })
       return done(null, user);
     } catch(err) {
       return done(err);
@@ -73,13 +81,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
+
+app.get("/users/login", (req, res) => res.render("login", { title: 'from app2'}));
 
 
 app.post(
-  "/login",
+  "/users/login",
   passport.authenticate("local", {
-    successRedirect: "/catalog/animals",
-    failureRedirect: "/catalog",
+    successRedirect: "/users",
+    failureRedirect: "/",
   })
 );
 
@@ -88,18 +101,36 @@ app.get("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("/")
+    res.redirect("/users")
   });
 });
- 
+
+
+app.get("/users/signup", (req, res) => res.render("signup_form", { title: 'from app'}));
+
+
+app.post("/users/signup", async (req, res, next) => {
+  try {
+    const user = new User({
+      username: req.body.username,
+      password: req.body.password
+    });
+    const result = await user.save();
+    res.redirect("/");
+  } catch(err) {
+    return next(err);
+  };
+});
+
+app.get("/", (req, res) => {
+  res.render("index", { user: req.user });
+});
+
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

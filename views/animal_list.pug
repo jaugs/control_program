@@ -2,7 +2,10 @@ extends layout
 
 block content
   h1= title
-  h4  ddd #{currentUser.username}
+  if currentUser
+    h4  ddd #{currentUser.username}
+  else
+    h4 no user detected
   ul
     each animal in animal_list
       li

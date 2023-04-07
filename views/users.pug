@@ -2,7 +2,10 @@ extends layout
 
 block content
   h1= title
-  h4 eeee #{currentUser.username}
+  if currentUser
+    h4 eeee #{currentUser.username}
+  else 
+    h4 logggggggggg
   ul
     each user in user_list
       li
@@ -12,24 +15,15 @@ block content
       li There are no Users found.
 
   a(href='/users/signup') Add New User
-
+  br
   if user 
     h3 Welcome back #{user.username}
-    <a href="/logout">LOG OUT</a>
+
+    <a href="/users/logout">LOG OUT</a>
   else 
-    p LOG IN FORM 
-    form(method='POST' action='/login')
-   
-      div.form-group
-        label(for='username') Username:
-        input#username.form-control(type='text' placeholder='username..' name='username' required='true')
-
-      div.form-group
-        label(for='password') Password:
-        input#password.form-control(type='text' placeholder='password...' name='password' required='true')
 
    
-      button.btn.btn-primary(type='submit') Log in
+    <a href="/users/login">LOG IN</a>
     //- ul
     //-   li #[strong Species:] !{data.animal_count}
     //-   li #[strong Animals Found:] !{data.animal_instance_count}

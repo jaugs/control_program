@@ -13,8 +13,6 @@ mongoose.set('strictQuery', false);
 const mongoDB = process.env.MONGODB_URI 
 const User = require("./models/userModel");
 
-
-
 main().catch(err => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
@@ -26,16 +24,12 @@ const catalogRouter = require("./routes/catalog"); //Import routes for "catalog"
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 
 passport.use(
@@ -48,19 +42,18 @@ passport.use(
       bcrypt.compare(password, user.password, (err, res) => {
         if (res) {
           // passwords match! log user in
+          console.log('here')
           return done(null, user)
         } else {
           // passwords do not match!
           return done(null, false, { message: "Incorrect password" })
         }
       })
-      return done(null, user);
-    } catch(err) {
+        } catch(err) {
       return done(err);
     };
   })
 );
-
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -81,55 +74,72 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
+//Get current signed in user
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
+//View engine/ router setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 
+
+//GET for login page
 app.get("/users/login", (req, res) => res.render("login", { title: 'from app2'}));
 
-
+//POST for login page
 app.post(
   "/users/login",
   passport.authenticate("local", {
     successRedirect: "/users",
-    failureRedirect: "/",
+    failureRedirect: "/users/login",
   })
 );
 
+//GET for logout page
 app.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
+      console.log('22');
       return next(err);
     }
-    res.redirect("/users")
+    res.render("logout", { title: "YOU HAVE LOGGED OUT"});
   });
 });
 
-
+//GET for signup page
 app.get("/users/signup", (req, res) => res.render("signup_form", { title: 'from app'}));
 
-
+//POST for signup page
 app.post("/users/signup", async (req, res, next) => {
   try {
-    const user = new User({
-      username: req.body.username,
-      password: req.body.password
-    });
-    const result = await user.save();
-    res.redirect("/");
+    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+      if (err) {
+        return next(err)
+      } 
+      const user = new User({
+        username: req.body.username,
+        password: hashedPassword
+      });
+      const result = await user.save();
+      res.redirect("/users");
+    })
   } catch(err) {
     return next(err);
   };
 });
 
+//GET for index
 app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
 
-app.use(function(req, res, next) {
-  res.locals.currentUser = req.user;
-  next();
-});
+
 
 
 // catch 404 and forward to error handler

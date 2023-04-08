@@ -5,7 +5,7 @@ block content
   if currentUser
     h4 eeee #{currentUser.username}
   else 
-    h4 logggggggggg
+    h4 no suer
   ul
     each user in user_list
       li
@@ -19,7 +19,7 @@ block content
   if user 
     h3 Welcome back #{user.username}
 
-    <a href="/users/logout">LOG OUT</a>
+    <a href="/logout">LOG OUT</a>
   else 
 
    

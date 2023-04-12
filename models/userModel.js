@@ -10,10 +10,10 @@ const UserSchema = new Schema({
   
 
 
-// Virtual for user's URL
+//Virtual for user's URL
 UserSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/users/${this._id}`;
+  return `/users/user/${this._id}`;
 });
 
 

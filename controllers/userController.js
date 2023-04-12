@@ -1,47 +1,6 @@
 const User = require("../models/userModel");
-var bcrypt = require('bcryptjs');
 const async = require("async");
 const { body, validationResult } = require("express-validator");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
-
-
-// passport.use(
-//   new LocalStrategy(async(username, password, done) => {
-//     try {
-//       const user = await User.findOne({ username: username });
-//       if (!user) {
-//         return done(null, false, { message: "Incorrect username" });
-//       };
-//       bcrypt.compare(password, user.password, (err, res) => {
-//         if (res) {
-//           // passwords match! log user in
-//           return done(null, user)
-//         } else {
-//           // passwords do not match!
-//           return done(null, false, { message: "Incorrect password" })
-//         }
-//       })
-//       return done(null, user);
-//     } catch(err) {
-//       return done(err);
-//     };
-//   })
-// );
-
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser(async function(id, done) {
-//   try {
-//     const user = await User.findById(id);
-//     done(null, user);
-//   } catch(err) {
-//     done(err);
-//   };
-// });
 
 //GET user List
 exports.index = (req, res, next) => {
@@ -56,35 +15,38 @@ exports.index = (req, res, next) => {
             }); 
     })  
   };
+//GET user detail
+  exports.user_detail = (req, res, next) => {    
+    User.findById(req.params.id).exec(function (err, user) {
+      if (err) {
+        return next(err);
+      }
+      if (user == null) {
+        // No results.
+        const err = new Error("User not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render("user_detail", {
+        title: "User Detail:",
+         user: user,
+      })
+    });
+  }
 
-  //user detail GET
-  // exports.user_detail = (req, res, next) => {
-  //   async.parallel(
-  //     {
-  //       user(callback) {
-  //         User.findById(req.params.id)
-  //           .exec(callback);
-  //       },
-  //     },
-  //     (err, results) => {
-  //       if (err) {
-  //         return next(err);
-  //       }
-  //       if (results.user == null) {
-  //         // No results.
-  //         const err = new Error("User not found");
-  //         err.status = 404;
-  //         return next(err);
-  //       }
-  //       // Successful, so render.
-  //       res.render("user_detail", {
-  //         title: "User Detail:",
-  //         user: results.user,
-  //       });
-  //     }
-  //   );
-  // };
-
+//API TEST
+exports.API_get = (req, res, next) => {
+  User.find({}, "username")
+  .sort({username: 1})
+  .exec(function (err, list_users) {
+    if (err) {
+      return next(err);
+    }
+    res.json(list_users) 
+  })  
+  }
+    
 
 // Display signup form on GET.
 // exports.signup_get = (req, res, next) => {

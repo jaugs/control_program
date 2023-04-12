@@ -6,6 +6,12 @@ const user_controller = require('../controllers/userController');
 /* GET users listing. */
 router.get('/', user_controller.index);
 
+//GET request for one user.
+router.get("/user/:id", user_controller.user_detail);
+
+//GET API User request
+router.get("/abc", user_controller.API_get)
+
 // GET request for creating a user. NOTE This must come before routes that display User (uses id).
 // router.get("/signup", user_controller.signup_get);
 
@@ -21,8 +27,7 @@ router.get('/', user_controller.index);
 //get request for log out user
 //router.get("/logout", user_controller.user_logout_get);
 
-// GET request for one user.
-//router.get("/:id", user_controller.user_detail);
+
 
 
 

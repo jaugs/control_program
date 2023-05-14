@@ -35,6 +35,18 @@ exports.animal_list = function (req, res, next) {
     });
 };
 
+// API list of all animals
+exports.animal_list_api = (req, res, next) => {
+  Animal.find({}, )
+  .sort({name: 1})
+  .exec(function (err, list_animals) {
+    if (err) {
+      return next(err);
+    }
+    res.json(list_animals) 
+  })  
+  }
+
 // Display detail page for a specific animal.
 exports.animal_detail = (req, res, next) => {
   async.parallel(

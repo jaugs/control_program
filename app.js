@@ -12,6 +12,8 @@ const mongoose = require("mongoose");
 mongoose.set('strictQuery', false);
 const mongoDB = process.env.MONGODB_URI 
 const User = require("./models/userModel");
+var cors = require('cors')
+
 
 main().catch(err => console.log(err));
 async function main() {
@@ -30,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 
 passport.use(

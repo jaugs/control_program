@@ -23,7 +23,7 @@ async function main() {
 var indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of site
-
+const apiRouter = require("./routes/apiRoutes"); // Import API routes
 var app = express();
 
 
@@ -90,7 +90,7 @@ app.set('view engine', 'pug');
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
-
+app.use("/api", apiRouter); // Add API routes to middleware
 
 //GET for login page
 app.get("/users/login", (req, res) => res.render("login", { title: 'from app2'}));
@@ -142,7 +142,9 @@ app.get("/", (req, res) => {
   res.render("index", { user: req.user });
 });
 
-
+app.get("/api", (req, res) => {
+  res.json('helo')
+})
 
 
 // catch 404 and forward to error handler

@@ -34,8 +34,17 @@ router.get("/animals/:id", animal_controller.animal_detail);
 // GET request for list of all Animal items.
 router.get("/animals", animal_controller.animal_list);
 
+
+//   ********************* API ROUTES **********************************************
+
 // GET request for list of Animals API
-router.get("/api/animals", animal_controller.animal_list_api)
+// router.get("/api/animals", animal_controller.animal_list_api)
+
+
+
+
+
+
 
 
 /// animalINSTANCE ROUTES ///

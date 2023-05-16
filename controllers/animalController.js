@@ -3,6 +3,28 @@ const AnimalInstance = require("../models/animalinstance");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
+
+
+exports.api_index = (req, res, next) => {
+  res.send('dfdf')
+}
+
+// API list of all animals
+exports.animal_list_api = (req, res, next) => {
+  Animal.find({}, )
+  .sort({name: 1})
+  .exec(function (err, list_animals) {
+    if (err) {
+      return next(err);
+    }
+    res.json(list_animals) 
+  })  
+  }
+
+exports.dinosaur = (req, res, next) => {
+  res.send('dino')
+}
+
 exports.index = (req, res) => {
   async.parallel(
     {
@@ -22,6 +44,7 @@ exports.index = (req, res) => {
     }
   );
 };
+
 // Display list of all animals.
 exports.animal_list = function (req, res, next) {
   Animal.find({}, )
@@ -34,18 +57,6 @@ exports.animal_list = function (req, res, next) {
       res.render("animal_list", { title: "Species List", animal_list: list_animals });
     });
 };
-
-// API list of all animals
-exports.animal_list_api = (req, res, next) => {
-  Animal.find({}, )
-  .sort({name: 1})
-  .exec(function (err, list_animals) {
-    if (err) {
-      return next(err);
-    }
-    res.json(list_animals) 
-  })  
-  }
 
 // Display detail page for a specific animal.
 exports.animal_detail = (req, res, next) => {

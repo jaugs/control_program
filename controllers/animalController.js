@@ -3,10 +3,10 @@ const AnimalInstance = require("../models/animalinstance");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
-
-
+// ***************************  API CONTROLLERS ****************************** \\
+//API INDEX
 exports.api_index = (req, res, next) => {
-  res.send('dfdf')
+  res.send('API')
 }
 
 // API list of all animals
@@ -21,9 +21,39 @@ exports.animal_list_api = (req, res, next) => {
   })  
   }
 
-exports.dinosaur = (req, res, next) => {
-  res.send('dino')
-}
+
+// Display detail page for a specific animal.
+exports.animal_detail_api = (req, res, next) => {
+  async.parallel(
+    {
+      animal(callback) {
+        Animal.findById(req.params.id)
+          .exec(callback);
+      },
+      animal_instance(callback) {
+        AnimalInstance.find({ animal: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.animal == null) {
+        // No results.
+        const err = new Error("Animal not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful
+      res.json(results.animal)
+    }
+  );
+};
+
+
+
+
+// ***************************  VIEW CONTROLLERS ****************************** \\
 
 exports.index = (req, res) => {
   async.parallel(

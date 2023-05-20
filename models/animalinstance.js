@@ -3,7 +3,8 @@ const { DateTime } = require("luxon");
 const Schema = mongoose.Schema;
 
 const AnimalInstanceSchema = new Schema({
-  animal: { type: Schema.Types.ObjectId, ref: "Animal", required: true }, // reference to the associated book
+  animal: { type: Schema.Types.ObjectId, ref: "Animal", required: true }, // reference to the associated animal
+  species: {type: String},
   imprint: { type: String, required: true },
   version: { type: String, required: true },
   current_height: { type: String, required: true },
@@ -15,7 +16,7 @@ const AnimalInstanceSchema = new Schema({
     default: "Maintenance",
   },
   birth_date: { type: Date, default: Date.now, required: true },
-  death_date: { type: Date, default: Date.now },
+  death_date: { type: Date, default: null },
   medical: { type: Schema.Types.ObjectId, ref: "Medical" },
   location: { type: Array },
   diet_schedule: { type: Array },

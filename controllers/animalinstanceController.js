@@ -51,38 +51,9 @@ exports.animalinstance_byspecies_api = (req, res, next) => {
 };
 
 //POST AnimalInstance Update
-exports.animalinstance_update_post_api = [
-
-  //Validate and Sanitixe
-  body("animal", "Species must be specified").trim().isLength({ min: 1 }).escape(),
-  body("imprint", "Imprint must be specified")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("version", "Version must be specified")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("current_weight", "Weight must be specified")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),
-  body("current_height", "Height must be specified")
-    .trim()
-    .isLength({ min: 1 })
-    .escape(),  
-  body("birth_date", "Invalid date")
-    .optional({ checkFalsy: true })
-    .isISO8601()
-    .toDate(),
-  body("death_date", "Invalid date")
-    .optional({ checkFalsy: true })
-    .isISO8601()
-    .toDate(),
-
-  //Process request after validation/sanitization
-  (req, res, next) => {
-    const errors = validationResult(req);
+exports.animalinstance_update_post_api = (req, res, next) => {
+    console.log(req.body)
+   //const errors = validationResult(req);
 
     //Create a AnimalInstance Object with escaped/trimmed data and current ID
     var animalinstance = new AnimalInstance({
@@ -95,38 +66,21 @@ exports.animalinstance_update_post_api = [
       death_date: req.body.death_date,
       _id: req.params.id,
     });
-
-    if (!errors.isEmpty()) {
-      //Erros, re render form with sanitized values/error messages
-      Animal.find({}, "title").exec(function (err, animals) {
-        if (err) {
-          return next(err);
-        }
-        res.render("animalinstance_form", {
-          title: "Update Animal",
-          animal_list: animals,
-          selected_animal: animalinstance.animal._id,
-          erros: errors.array(),
-          animalinstance: animalinstance,
-        });
-      });
-      return;
-    } else {
-      //Success Data is valid
+    console.log(animalinstance)
       AnimalInstance.findByIdAndUpdate(
         req.params.id,
         animalinstance,
         {},
         function(err, theanimalinstance) {
           if (err) {
+            
             return next(err);
+            
           }
-          res.redirect(theanimalinstance.url);
         }
       );
     }
-  },
-];
+  
 
 // ***************************  VIEW CONTROLLERS ****************************** \\
 

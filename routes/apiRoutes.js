@@ -4,7 +4,7 @@ const router = express.Router();
 // Require controller modules.
 const animal_controller = require("../controllers/animalController");
 const animal_instance_controller = require("../controllers/animalinstanceController");
-
+const garage_controller = require("../controllers/garageController")
 
 //   ********************* API ROUTES **********************************************
 
@@ -27,6 +27,8 @@ router.get("/animalinstances", animal_instance_controller.animalinstance_list_ap
 router.get("/animalinstances/species/:name", animal_instance_controller.animalinstance_byspecies_api);
 
 // POST request to update Animal.
-router.post("/animalinstance/:id/update", animal_controller.animal_update_post);
+router.post("/animalinstance/:id/update", animal_instance_controller.animalinstance_update_post_api);
+
+//GET request for list of Vehicles
 
 module.exports = router;

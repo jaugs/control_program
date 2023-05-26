@@ -30,5 +30,10 @@ router.get("/animalinstances/species/:name", animal_instance_controller.animalin
 router.post("/animalinstance/:id/update", animal_instance_controller.animalinstance_update_post_api);
 
 //GET request for list of Vehicles
+router.get("/garage", garage_controller.garage_list_api)
+
+//POST request to update vehicle
+router.post("/garage/:id/update", garage_controller.garage_update_post_api)
+
 
 module.exports = router;

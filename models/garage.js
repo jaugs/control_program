@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 
 const GarageSchema = new Schema({
     make: { type: String, required: true},
-    model: { type: String, required: true},
+    badge: { type: String, required: true},
     useStatus: { type: Boolean, required: true},
     maintenanceStatus: {type: Boolean, required: true},
     milage: {type: Number, required: true},

@@ -3,6 +3,14 @@ const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
+var schemaOptions = {
+  toObject: {
+    virtuals: true
+  }
+  ,toJSON: {
+    virtuals: true
+  }
+};
 
 const GarageSchema = new Schema({
     make: { type: String, required: true},
@@ -12,10 +20,15 @@ const GarageSchema = new Schema({
     milage: {type: Number, required: true},
     service_history: [{service_type: String, service_date: Date, service_notes: String}],
     next_service: {type: Date},
-  });
+  }, schemaOptions);
   
   GarageSchema.virtual("next_service_formatted").get(function () {
-    return DateTime.fromJSDate(this.next_service).toLocaleString(DateTime.DATE_MED);
+    return DateTime.fromJSDate(this.next_service).toLocaleString(DateTime.DATE_SHORTD);
+  });
+
+  GarageSchema.virtual("service_date_formatted").get(function () {
+   return this.service_history.map(item => {return DateTime.fromJSDate(item.service_date).toLocaleString(DateTime.DATE_SHORTD)})
+  
   });
   
 module.exports = mongoose.model("Garage", GarageSchema);

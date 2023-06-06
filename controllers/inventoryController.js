@@ -1,5 +1,4 @@
-const Garage = require("../models/garage");
-const Ride = require("../models/rides");
+const { Item, Inventory } = require("../models/item")
 const { body, validationResult } = require("express-validator");
 const async = require("async");
 const { Query } = require("mongoose");
@@ -7,20 +6,20 @@ const { query } = require("express");
 
 // ***************************  API CONTROLLERS ****************************** \\
 
-// GET list of vehicle instances
-exports.garage_list_api = function (req, res, next) {
-    Garage.find()
-    .exec(function (err, list_vehicles) {
+// GET list of all items in category
+exports.inventory_list_api = function (req, res, next) {
+    Item.find({category: req.params})
+    .exec(function (err, list_inventory) {
       if (err) {
         return next(err);
       }
       // Successful, so render+
-      res.json(list_vehicles)
+      res.json(list_inventory)
     });
 };
 
 //POST Vehicle Update
-exports.garage_update_post_api = [
+exports.item_update_post_api = [
 
   //Validate/Sanitize
   body("useStatus", "Must be True/False").isBoolean().escape(),

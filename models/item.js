@@ -87,4 +87,4 @@ const ItemSchema = new Schema({
 const Item = mongoose.model('Item', ItemSchema);
 const Inventory = mongoose.model('Inventory', InventorySchema);
 
-module.exports = { Item, Inventory };
+module.exports = Item;

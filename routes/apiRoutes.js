@@ -4,8 +4,8 @@ const router = express.Router();
 // Require controller modules.
 const animal_controller = require("../controllers/animalController");
 const animal_instance_controller = require("../controllers/animalinstanceController");
-const garage_controller = require("../controllers/garageController")
-
+const garage_controller = require("../controllers/garageController");
+const inventory_controller = require("../controllers/inventoryController");
 //   ********************* API ROUTES **********************************************
 
 //GET main API
@@ -54,5 +54,9 @@ router.post("/rides/:id/update", garage_controller.rides_update_post_api)
 //POST request to create Ride
 router.post("/rides/addRide", garage_controller.rides_create_post_api)
 
+//**************// // RIDES SECTION // // ****************//
+
+//GET request for list of inventory by category
+router.get("/inventory/category/:search", inventory_controller.inventory_list_api)
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { Item, Inventory } = require("../models/item")
+const  Item  = require("../models/item")
 const { body, validationResult } = require("express-validator");
 const async = require("async");
 const { Query } = require("mongoose");
@@ -8,9 +8,11 @@ const { query } = require("express");
 
 // GET list of all items in category
 exports.inventory_list_api = function (req, res, next) {
-    Item.find({category: req.params})
+  console.log(req.params.search)
+    Item.find({category: req.params.search})
     .exec(function (err, list_inventory) {
       if (err) {
+        console.log(err)
         return next(err);
       }
       // Successful, so render+
@@ -18,7 +20,7 @@ exports.inventory_list_api = function (req, res, next) {
     });
 };
 
-//POST Vehicle Update
+//POST Inventory Item Update
 exports.item_update_post_api = [
 
   //Validate/Sanitize
@@ -36,7 +38,7 @@ exports.item_update_post_api = [
     const errors = validationResult(req);
 
     //Create a Vehicle Object with escaped/trimmed data and current ID
-    var vehicle = new Garage({
+    var newItem = new Item({
       make: req.body.make,
       badge: req.body.badge,
       maintenanceStatus: req.body.maintenanceStatus,
@@ -46,7 +48,7 @@ exports.item_update_post_api = [
       service_history: req.body.service_history,
       _id: req.params.id,
     });
-    console.log(vehicle)
+    console.log(newItem)
 
     if (!errors.isEmpty()) {
       console.log(errors)

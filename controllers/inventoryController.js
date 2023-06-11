@@ -7,7 +7,7 @@ const { query } = require("express");
 // ***************************  API CONTROLLERS ****************************** \\
 
 // GET list of all items in category
-exports.inventory_list_api = function (req, res, next) {
+exports.inventory_category_search_api = function (req, res, next) {
   console.log(req.params.search)
     Item.find({category: req.params.search})
     .exec(function (err, list_inventory) {
@@ -20,32 +20,94 @@ exports.inventory_list_api = function (req, res, next) {
     });
 };
 
+//GET list of all Equipment Items
+exports.inventory_equipment_api = function (req, res, next) {
+    Item.find({category: ['Park_Equipment', 'Control_Equipment', 'Tools', 'IT_Equipment'] })
+    .sort({category: 1})
+    .exec(function (err, list_inventory) {
+      if (err) {
+        console.log(err)
+        return next(err);
+      }
+      // Successful, so render+
+      res.json(list_inventory)
+    });
+};
+
+//GET list of all Feed Items
+exports.inventory_feed_api = function (req, res, next) {
+  Item.find({category: ['Feed'] })
+  .sort({category: 1})
+  .exec(function (err, list_inventory) {
+    if (err) {
+      console.log(err)
+      return next(err);
+    }
+    // Successful, so render+
+    res.json(list_inventory)
+  });
+};
+
+//GET list of all Lab Items
+exports.inventory_lab_api = function (req, res, next) {
+  Item.find({category: ['Lab_Equipment'] })
+  .sort({category: 1})
+  .exec(function (err, list_inventory) {
+    if (err) {
+      console.log(err)
+      return next(err);
+    }
+    // Successful, so render+
+    res.json(list_inventory)
+  });
+};
+
+//GET list of all Resort Items
+exports.inventory_resort_api = function (req, res, next) {
+  Item.find({category: ['Park_Merchandise', 'Lodge_Amenities'] })
+  .sort({category: 1})
+  .exec(function (err, list_inventory) {
+    if (err) {
+      console.log(err)
+      return next(err);
+    }
+    // Successful, so render+
+    res.json(list_inventory)
+  });
+};
+
+
 //POST Inventory Item Update
-exports.item_update_post_api = [
+exports.inventory_update_post_api = [
 
   //Validate/Sanitize
-  body("useStatus", "Must be True/False").isBoolean().escape(),
-  body("maintenanceStatus", "Must be True/False").isBoolean().escape(),
-  body("milage", "Must be whole number").isNumeric(),
-  body("next_service", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-  body("service_history",).isArray(),
-  body("*service_date", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-  body("*service_notes",).trim().escape(),
-  body("*service_type", "Service Type Cannot be Empty").trim().escape(),
-
+  body("category",).trim().escape(),
+  body("sub_category",).trim().escape(),
+  body("quantity", "Must be whole number").isNumeric(),
+  body("price", "Must be whole number").isNumeric(),
+  body("description",).trim().escape(),
+  body("isAvailable", "Must be True/False").isBoolean().escape(),
+  body("supplier",).trim().escape(),
+  body("lotSize", "Must be whole number").isNumeric(),
+ // body("lastOrdered", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
+  body("tags",).isArray(),
+  
   //Process request after validation/sanitization
   (req, res, next) => {
     const errors = validationResult(req);
 
-    //Create a Vehicle Object with escaped/trimmed data and current ID
+    //Create a Item Object with escaped/trimmed data and current ID
     var newItem = new Item({
-      make: req.body.make,
-      badge: req.body.badge,
-      maintenanceStatus: req.body.maintenanceStatus,
-      useStatus: req.body.useStatus,
-      milage: req.body.milage,
-      next_service: req.body.next_service,
-      service_history: req.body.service_history,
+      category: req.body.category,
+      sub_category: req.body.sub_category,
+      quantity: req.body.quantity,
+      price: req.body.price,
+      description: req.body.description,
+      isAvailable: req.body.isAvailable,
+      supplier: req.body.supplier,
+      lotSize: req.body.lotSize,
+      lastOrdered: req.body.lastOrdered,
+      tags: req.body.tags,
       _id: req.params.id,
     });
     console.log(newItem)
@@ -53,20 +115,20 @@ exports.item_update_post_api = [
     if (!errors.isEmpty()) {
       console.log(errors)
       //Erros, re render form with sanitized values/error messages
-      Garage.find({},).exec(function (err, vehicles) {
+      Item.find({},).exec(function (err, item) {
         if (err) {
           return next(err);
         }
-        res.json(vehicles);
+        res.json(req.body);
       });
       return;
     } else {
       //Success Data is valid
-      Garage.findByIdAndUpdate(
+      Item.findByIdAndUpdate(
         req.params.id,
-        vehicle,
+        newItem,
         {},
-        function(err, thevehicle) {
+        function(err, theItem) {
          if (err) {
             console.log(err)
             return next(err); 
@@ -77,48 +139,46 @@ exports.item_update_post_api = [
   }
 ]
 
-//POST for creating Vehicle
-exports.garage_create_post_api =  [
+//POST for creating Item
+exports.inventory_create_post_api =  [
   
   //Validate/Sanitize
-  body("make", "Must be Jeep/Land Cruiser/Utility").isIn(["Jeep", "Land Cruiser", "Utility"]),
-  body("badge", "Must be String").trim().escape(),
-  body("useStatus", "Must be True/False").isBoolean().escape(),
-  body("maintenanceStatus", "Must be True/False").isBoolean().escape(),
-  body("milage", "Must be whole number").isNumeric(),
-  body("next_service", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-  body("service_history",).isArray(),
-  body("*service_date", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-  body("*service_notes",).trim().escape(),
-  body("*service_type", "Service Type Cannot be Empty").trim().escape(),
-
+  body("category",).trim().escape(),
+  body("sub_category",).trim().escape(),
+  body("quantity", "Must be whole number").isNumeric(),
+  body("price", "Must be whole number").isNumeric(),
+  body("description",).trim().escape(),
+  body("isAvailable", "Must be True/False").isBoolean().escape(),
+  body("supplier",).trim().escape(),
+  body("lotSize", "Must be whole number").isNumeric(),
+  body("tags",).isArray(),
 //Process request after validation/sanitization
   (req, res, next) => {
+
     const errors = validationResult(req);
   //Create a Vehicle Object with escaped/trimmed data and current ID
-    var vehicle = new Garage({
-      make: req.body.make,
-      badge: req.body.badge,
-      maintenanceStatus: req.body.maintenanceStatus,
-      useStatus: req.body.useStatus,
-      milage: req.body.milage,
-      next_service: req.body.next_service,
-      service_history: req.body.service_history,
-    });
+  var newItem = new Item({
+    name: req.body.name,
+    category: req.body.category,
+    sub_category: req.body.sub_category,
+    quantity: req.body.quantity,
+    price: req.body.price,
+    description: req.body.description,
+    isAvailable: req.body.isAvailable,
+    supplier: req.body.supplier,
+    lotSize: req.body.lotSize,
+    tags: req.body.tags,
+  });
+  console.log(newItem)
 
     if (!errors.isEmpty()) {
       console.log(errors)
       //Erros, re render form with sanitized values/error messages
-      Garage.find({},).exec(function (err, vehicles) {
-        if (err) {
-          return next(err);
-        }
-        res.json(vehicles);
-      });
+      res.json(req.body)
       return;
     } else {
       //Success Data is valid
-      vehicle.save((err) => {
+      newItem.save((err) => {
         if (err) {
           return next(err);
         }
@@ -128,104 +188,4 @@ exports.garage_create_post_api =  [
 },
 ]
 
-//**********************************RIDE CONTROLLERS***********************************//
 
-// GET list of Rides
-exports.rides_list_api = function (req, res, next) {
-  Ride.find()
-  .exec(function (err, list_rides) {
-    if (err) {
-      return next(err);
-    }
-    // Successful, so render+
-    res.json(list_rides)
-  });
-};
-
-//POST Ride Update
-exports.rides_update_post_api = [
-
-//Validate/Sanitize
-body("name", "Cannot be Empty").trim().escape(),
-body("operational", "Must be True/False").isBoolean().escape(),
-body("opening_date", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-
-//Process request after validation/sanitization
-(req, res, next) => {
-  const errors = validationResult(req);
-
-  //Create a Vehicle Object with escaped/trimmed data and current ID
-  var ride = new Ride({
-    name: req.body.name,
-    operational: req.body.operational,
-    opening_date: req.body.opening_date,
-    _id: req.params.id,
-  });
-  console.log(ride)
-
-  if (!errors.isEmpty()) {
-    console.log(errors)
-    //Erros, re render form with sanitized values/error messages
-    Ride.find({},).exec(function (err, rides) {
-      if (err) {
-        return next(err);
-      }
-      res.json(rides);
-    });
-    return;
-  } else {
-    //Success Data is valid
-    Ride.findByIdAndUpdate(
-      req.params.id,
-      ride,
-      {},
-      function(err, the_ride) {
-       if (err) {
-          console.log(err)
-          return next(err); 
-        }
-        res.json('Success');
-      });
-  }
-}
-]
-
-//POST for creating Vehicle
-exports.rides_create_post_api =  [
-
-//Validate/Sanitize
-body("name", "Cannot be Empty").trim().escape(),
-body("operational", "Must be True/False").isBoolean().escape(),
-body("opening_date", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
-
-//Process request after validation/sanitization
-(req, res, next) => {
-  const errors = validationResult(req);
-//Create a Vehicle Object with escaped/trimmed data and current ID
-var ride = new Ride({
-  name: req.body.name,
-  operational: req.body.operational,
-  opening_date: req.body.opening_date,
-});
-
-  if (!errors.isEmpty()) {
-    console.log(errors)
-    //Erros, re render form with sanitized values/error messages
-    Ride.find({},).exec(function (err, rides) {
-      if (err) {
-        return next(err);
-      }
-      res.json(rides);
-    });
-    return;
-  } else {
-    //Success Data is valid
-    ride.save((err) => {
-      if (err) {
-        return next(err);
-      }
-      res.json('Success')
-    })
-}
-},
-]

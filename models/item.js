@@ -63,7 +63,7 @@ const ItemSchema = new Schema({
   },
   }, schemaOptions);
   
-  ItemSchema.virtual("opening_date_formatted").get(function () {
+  ItemSchema.virtual("lastOrdered_formatted").get(function () {
     return DateTime.fromJSDate(this.lastOrdered).toLocaleString(DateTime.DATE_SHORTD);
   });
 

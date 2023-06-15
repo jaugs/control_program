@@ -71,7 +71,8 @@ const ItemSchema = new Schema({
     return this.orderHistory.map(item => {return DateTime.fromJSDate(item.date).toLocaleString(DateTime.DATE_SHORTD)})
    
    });
-
+  ItemSchema.index({'$**': 'text' });
+  
    const InventorySchema = new Schema({
     items: [ItemSchema],
     createdAt: {

@@ -77,7 +77,9 @@ router.get("/inventory/lab", inventory_controller.inventory_lab_api)
 //GET request for list of Resort Inventory
 router.get("/inventory/resort", inventory_controller.inventory_resort_api)
 
+//GET request for Find Item Query
+router.get("/inventory/find/:search", inventory_controller.find_item_api)
 
-
-
+//POST request to add Order more Items to Inventory
+router.post("/inventory/orderItem", inventory_controller.inventory_order_post_api)
 module.exports = router;

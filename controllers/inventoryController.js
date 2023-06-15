@@ -89,7 +89,7 @@ exports.inventory_update_post_api = [
   body("isAvailable", "Must be True/False").isBoolean().escape(),
   body("supplier",).trim().escape(),
   body("lotSize", "Must be whole number").isNumeric(),
- // body("lastOrdered", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
+ // 
   body("tags",).isArray(),
   
   //Process request after validation/sanitization
@@ -138,6 +138,21 @@ exports.inventory_update_post_api = [
     }
   }
 ]
+
+exports.find_item_api = function (req, res, next) {
+  console.log(req.params.search)
+  Item.find({$text: {$search: req.params.search}})
+  .sort({category: 1})
+  .exec(function (err, list_inventory) {
+    if (err) {
+      console.log(err)
+      return next(err);
+    }
+    console.log('hello')
+    // Successful, so render+
+    res.json(list_inventory)
+  });
+};
 
 //POST for creating Item
 exports.inventory_create_post_api =  [
@@ -188,4 +203,38 @@ exports.inventory_create_post_api =  [
 },
 ]
 
+exports.inventory_order_post_api= [
+  
+  //Validate/Sanitize
+  body("lastOrdered", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
+  body("orderHistory.*.data",).optional({ checkFalsy: true }).isISO8601().toDate(),
+  body("orderHistory.*.quantity",).isNumeric(),
 
+//Process request after validation/sanitization
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors)
+      //Erros, re render form with sanitized values/error messages
+      Item.find({},).exec(function (err, item) {
+        if (err) {
+          return next(err);
+        }
+        res.json(req.body);
+      });
+      return;
+    } else {
+      Item.findByIdAndUpdate(req.body.id, {
+        lastOrdered: req.body.lastOrdered,
+        $push: {"orderHistory": req.body.orderHistory}
+      },{new: true}, function(err, theItem) {
+        if (err) {
+          console.log(err)
+          return next(err);
+        }
+        console.log(theItem._id)
+        res.json('Success')
+      });
+    }
+  }
+]

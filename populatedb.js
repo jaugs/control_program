@@ -9,10 +9,14 @@ console.log(
   
 
   //import Item from "./models/item";
-  const Item = require("./models/item")
+  //const Item = require("./models/item");
+  //const Resort = require("./models/resort");
+  
+  const Room = require("./models/resort")
   const items = [];
   const animals = [];
   const animalinstances = [];
+  const rooms = []
   const mongoose = require("mongoose");
   mongoose.set("strictQuery", false); // Prepare for Mongoose 7
   
@@ -27,29 +31,181 @@ console.log(
   
     //await createAnimals();
     //await createAnimalInstances();
-    await createItems();
+    await createRooms();
+    //await createItems();
     console.log("Debug: Closing mongoose");
     mongoose.connection.close();
   }
   
-  async function itemCreate(name, category, sub_category, quantity, price, description, supplier, tags, lotSize, lastOrdered) {
-    itemdetail = {
-      name: name,
-      category: category,
-      sub_category: sub_category,
-      quantity: quantity,
-      price: price,
-      description: description,
-      supplier: supplier,
-      tags: tags,
-      lotSize: lotSize,
-      lastOrdered: lastOrdered,
+  // async function itemCreate(name, category, sub_category, quantity, price, description, supplier, tags, lotSize, lastOrdered) {
+  //   itemdetail = {
+  //     name: name,
+  //     category: category,
+  //     sub_category: sub_category,
+  //     quantity: quantity,
+  //     price: price,
+  //     description: description,
+  //     supplier: supplier,
+  //     tags: tags,
+  //     lotSize: lotSize,
+  //     lastOrdered: lastOrdered,
+  //   };
+
+  //   const item = new Item(itemdetail);
+  //   await item.save();
+  //   console.log(`added ${item.name}`)
+  // }
+
+  async function roomCreate(roomNumber, guestName, checkInDate, checkOutDate, status, createdAt, lastCleanedDate) {
+    roomDetail = {
+      roomNumber: roomNumber,
+      guestName: guestName,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+      status: status,
+      createdAt: createdAt,
+      lastCleanedDate: lastCleanedDate,
     };
 
-    const item = new Item(itemdetail);
-    await item.save();
-    console.log(`added ${item.name}`)
+    const room = new Room(roomDetail);
+    await room.save();
+    console.log(`added ${room.roomNumber}`)
   }
+
+
+
+  async function createRooms() {
+    console.log('adding items....')
+    await Promise.all([
+      roomCreate(
+      101, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-23"),
+      roomCreate(
+      102, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-24"),
+      roomCreate(
+      103, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-25"),
+      roomCreate(
+      104, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-23"),
+      roomCreate(
+      105, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-23"),
+      roomCreate(
+      106, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-24"),
+      roomCreate(
+      107, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-25"),
+      roomCreate(
+      108, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-25"),
+      roomCreate(
+      201, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-24"),
+      roomCreate(
+      202, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-23"),
+      roomCreate(
+      203, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-25"),
+      roomCreate(
+      204, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-23"),
+     roomCreate(
+      205, 
+      'Vacant', 
+      "",
+      '',
+      'vacant',
+      '',
+      "1990-08-24"),
+      roomCreate(
+        206, 
+        'Vacant', 
+        "",
+        '',
+        'vacant',
+        '',
+        "1990-08-24"),
+        roomCreate(
+          207, 
+          'Vacant', 
+          "",
+          '',
+          'vacant',
+          '',
+          "1990-08-23"),
+          roomCreate(
+            208, 
+            'Vacant', 
+            "",
+            '',
+            'vacant',
+            '',
+            "1990-08-25"),
+      ])}
 
 
   // async function animalCreate(name, scientificname, current_version, description, diet, synth_date) {

@@ -6,13 +6,16 @@ const animal_controller = require("../controllers/animalController");
 const animal_instance_controller = require("../controllers/animalinstanceController");
 const garage_controller = require("../controllers/garageController");
 const inventory_controller = require("../controllers/inventoryController");
+const resort_controller = require("../controllers/resortController")
+
 //   ********************* API ROUTES **********************************************
 
 //GET main API
 router.get("/", animal_controller.api_index);
 
 
-//**************// // ANIMAL SECTION // // ****************//
+//******************************// // ANIMAL SECTION // // ****************************************//
+
 
 // GET request for list of Animals API
 router.get("/animals", animal_controller.animal_list_api)
@@ -32,7 +35,7 @@ router.get("/animalinstances/species/:name", animal_instance_controller.animalin
 // POST request to update Animal.
 router.post("/animalinstance/:id/update", animal_instance_controller.animalinstance_update_post_api);
 
-//**************// // GARAGE SECTION // // ****************//
+//******************************// // GARAGE SECTION // // ****************************************//
 
 //GET request for list of Vehicles
 router.get("/garage", garage_controller.garage_list_api)
@@ -43,7 +46,9 @@ router.post("/garage/:id/update", garage_controller.garage_update_post_api)
 //POST request to create Vehicle
 router.post("/garage/addVehicle", garage_controller.garage_create_post_api)
 
-//**************// // RIDES SECTION // // ****************//
+
+//******************************// // RIDES SECTION // // ****************************************//
+
 
 //GET request for list of Rides
 router.get("/rides", garage_controller.rides_list_api)
@@ -54,7 +59,7 @@ router.post("/rides/:id/update", garage_controller.rides_update_post_api)
 //POST request to create Ride
 router.post("/rides/addRide", garage_controller.rides_create_post_api)
 
-//**************// // INVENTORY SECTION // // ****************//
+//******************************// // INVENTORY SECTION // // ****************************************//
 
 //GET request for list of inventory by category
 router.get("/inventory/category/:search", inventory_controller.inventory_category_search_api)
@@ -82,4 +87,10 @@ router.get("/inventory/find/:search", inventory_controller.find_item_api)
 
 //POST request to add Order more Items to Inventory
 router.post("/inventory/orderItem", inventory_controller.inventory_order_post_api)
+
+
+//******************************// // RESORT SECTION // // ****************************************//
+router.get("/resort/rooms", resort_controller.room_list_api)
+
+
 module.exports = router;

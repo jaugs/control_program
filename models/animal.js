@@ -25,7 +25,7 @@ AnimalSchema.virtual("url").get(function () {
 });
 
 AnimalSchema.virtual("synth_date_formatted").get(function () {
-  return DateTime.fromJSDate(this.synth_date).toLocaleString(DateTime.DATE_MED);
+  return DateTime.fromJSDate(this.synth_date, {zone: 'utc'}).toLocaleString(DateTime.DATE_MED);
 });
 
 // Export model

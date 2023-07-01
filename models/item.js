@@ -64,11 +64,11 @@ const ItemSchema = new Schema({
   }, schemaOptions);
   
   ItemSchema.virtual("lastOrdered_formatted").get(function () {
-    return DateTime.fromJSDate(this.lastOrdered).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.lastOrdered, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
 
   ItemSchema.virtual("orderHistory_formatted").get(function () {
-    return this.orderHistory.map(item => {return DateTime.fromJSDate(item.date).toLocaleString(DateTime.DATE_SHORTD)})
+    return this.orderHistory.map(item => {return DateTime.fromJSDate(item.date, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD)})
    
    });
   ItemSchema.index({'$**': 'text' });

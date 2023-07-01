@@ -92,5 +92,7 @@ router.post("/inventory/orderItem", inventory_controller.inventory_order_post_ap
 //******************************// // RESORT SECTION // // ****************************************//
 router.get("/resort/rooms", resort_controller.room_list_api)
 
+//POST request to update room cleaning
+router.post("/resort/cleaning/update", resort_controller.cleaning_update_post_api)
 
 module.exports = router;

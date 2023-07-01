@@ -19,7 +19,7 @@ const RidesSchema = new Schema({
   }, schemaOptions);
   
   RidesSchema.virtual("opening_date_formatted").get(function () {
-    return DateTime.fromJSDate(this.opening_date).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.opening_date, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
 
 

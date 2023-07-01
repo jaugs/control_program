@@ -40,16 +40,16 @@ const resortSchema = new mongoose.Schema({
 }, schemaOptions);
 
 resortSchema.virtual("checkIn_formatted").get(function () {
-    return DateTime.fromJSDate(this.checkInDate).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.checkInDate, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
   resortSchema.virtual("checkOut_formatted").get(function () {
-    return DateTime.fromJSDate(this.checkOutDate).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.checkOutDate, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
   resortSchema.virtual("createdAt_formatted").get(function () {
-    return DateTime.fromJSDate(this.createdAt).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.createdAt, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
   resortSchema.virtual("lastCleaned_formatted").get(function () {
-    return DateTime.fromJSDate(this.lastCleanedDate).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.lastCleanedDate, {zone: 'utc'}).toLocaleString();
   });
   
 

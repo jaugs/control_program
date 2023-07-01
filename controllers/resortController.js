@@ -16,10 +16,43 @@ exports.room_list_api = function (req, res, next) {
         if (err) {
             return next(err);
         }
-        console.log(list_rooms)
         res.json(list_rooms)
     });
 };
+
+//POST Resort Room Cleaning Update
+exports.cleaning_update_post_api = [
+
+  //Validate/Sanitize
+  body("lastCleaned", "Invalid Date").optional({ checkFalsy: true }).isISO8601().toDate(),
+  
+   // Process request after validation/sanitization
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors)
+      //Erros, re render form with sanitized values/error messages
+      Room.find({},).exec(function (err, item) {
+        if (err) {
+          return next(err);
+        }
+        res.json(req.body);
+      });
+      return;
+    } else {
+      Room.findByIdAndUpdate(req.body.id, {
+        lastCleanedDate: req.body.lastCleanedDate,
+      },{new: true}, function(err, theRoom) {
+        if (err) {
+          console.log(err)
+          return next(err);
+        }
+        
+        res.json('Success')
+      });
+    }
+  }
+]
 
 
 // // GET list of all items in category

@@ -28,11 +28,11 @@ AnimalInstanceSchema.virtual("url").get(function () {
 });
 
 AnimalInstanceSchema.virtual("birth_date_formatted").get(function () {
-  return DateTime.fromJSDate(this.birth_date).toLocaleString(DateTime.DATE_MED);
+  return DateTime.fromJSDate(this.birth_date, {zone: 'utc'}).toLocaleString(DateTime.DATE_MED);
 });
 
 AnimalInstanceSchema.virtual("death_date_formatted").get(function () {
-  return DateTime.fromJSDate(this.death_date).toLocaleString(DateTime.DATE_MED);
+  return DateTime.fromJSDate(this.death_date, {zone: 'utc'}).toLocaleString(DateTime.DATE_MED);
 });
 
 // Export model

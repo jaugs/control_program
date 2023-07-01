@@ -23,11 +23,11 @@ const GarageSchema = new Schema({
   }, schemaOptions);
   
   GarageSchema.virtual("next_service_formatted").get(function () {
-    return DateTime.fromJSDate(this.next_service).toLocaleString(DateTime.DATE_SHORTD);
+    return DateTime.fromJSDate(this.next_service, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD);
   });
 
   GarageSchema.virtual("service_date_formatted").get(function () {
-   return this.service_history.map(item => {return DateTime.fromJSDate(item.service_date).toLocaleString(DateTime.DATE_SHORTD)})
+   return this.service_history.map(item => {return DateTime.fromJSDate(item.service_date, {zone: 'utc'}).toLocaleString(DateTime.DATE_SHORTD)})
   
   });
   

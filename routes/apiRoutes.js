@@ -95,4 +95,13 @@ router.get("/resort/rooms", resort_controller.room_list_api)
 //POST request to update room cleaning
 router.post("/resort/cleaning/update", resort_controller.cleaning_update_post_api)
 
+//POST request to update room booking
+router.post("/resort/booking/update", resort_controller.booking_update_post_api)
+
+//POST request to update room Check In
+router.post("/resort/checkin/update", resort_controller.checkin_update_post_api)
+
+//POST request to update room Check Out
+router.post("/resort/checkout/update", resort_controller.checkout_update_post_api)
+
 module.exports = router;
